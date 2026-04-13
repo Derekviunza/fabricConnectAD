@@ -54,8 +54,6 @@ fabric_connect_ad <- function(
     stop("Invalid authentication_method. Use 'ActiveDirectoryInteractive', 'ActiveDirectoryPassword', or 'Password'")
   }
   
-  if (is.null(database_name)) database_name <- "uzima_db_backup"
-  
   tryCatch({
     con <- DBI::dbConnect(
       odbc::odbc(),
@@ -71,7 +69,7 @@ fabric_connect_ad <- function(
       Timeout = timeout
     )
     
-    message("Successfully connected to Fabric ", ifelse(database_name == "master", "endpoint", "Lakehouse"))
+    message("Successfully connected to Fabric ", ifelse(is.null(database_name), "endpoint", ifelse(database_name == "master", "endpoint", "Lakehouse")))
     return(con)
     
   }, error = function(e) {
